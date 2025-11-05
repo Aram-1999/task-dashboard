@@ -36,8 +36,7 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
         <label className="text-green-800" htmlFor="status-filter">
           Status Filter
         </label>
-        <select
-          className="mx-5 border rounded p-1"
+        <select className={filters.status ? 'bg-blue-400 mx-5 border rounded p-1' : 'bg-white mx-5 border rounded p-1'}
           name="status"
           id="status-filter"
           value={filters.status}
@@ -55,7 +54,7 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
           Priority Filter
         </label>
         <select
-          className="mx-5 border rounded p-1"
+          className={filters.priority ? 'bg-blue-400 mx-5 border rounded p-1' : 'bg-white mx-5 border rounded p-1'}
           name="priority"
           id="priority-filter"
           value={filters.priority}

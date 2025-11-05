@@ -64,7 +64,7 @@ function TaskForm({ onSubmit }: FormProps) {
   const handleForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (formData.title.length < 1) {
+    if (formData.title.trim().length < 1) {
       setError((prev) => ({ ...prev, input: false }));
       return;
     }
