@@ -8,6 +8,6 @@ Users can easily organize and manage tasks using the filtering and sorting featu
 
 The Dashboard component connects all key parts of the application, including TaskFilter, TaskList, and TaskForm. TaskFilter handles filtering logic and communicates changes back to the Dashboard through callback functions. TaskList displays all tasks, renders each task’s interface using the TaskItem component, and provides controls for sorting and searching. TaskForm allows users to create new tasks and includes fields for title, description, due date, priority, and status. All these fields are managed through the formData state variable, ensuring controlled and reliable data input.
 
-Overall, the Task Management Dashboard offers a clean and responsive interface for managing tasks, visualizing task statistics, and maintaining task priorities. The combination of real-time updates, intuitive filtering, and visual feedback creates a seamless and interactive user experience. Here is an example of how the app looks on the desktop: 
+Overall, the Task Management Dashboard offers a clean and responsive interface for managing tasks, visualizing task statistics, and maintaining task priorities. The combination of real-time updates, intuitive filtering, and visual feedback creates a seamless and interactive user experience. Here is an example of how the app can look on the desktop: 
 
 ![A view of the app on desktop](./src/assets/localhost_5173_.png)
