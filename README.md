@@ -10,4 +10,4 @@ The Dashboard component connects all key parts of the application, including Tas
 
 Overall, the Task Management Dashboard offers a clean and responsive interface for managing tasks, visualizing task statistics, and maintaining task priorities. The combination of real-time updates, intuitive filtering, and visual feedback creates a seamless and interactive user experience. Here is an example of how the app can look on the desktop: 
 
-![A view of the app on desktop](./src/assets/localhost_5173_.png)
+![A view of the app on desktop](./src/assets/appScreenshot.png)
