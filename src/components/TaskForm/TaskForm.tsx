@@ -20,7 +20,7 @@ function TaskForm({ onSubmit }: FormProps) {
   });
 
   const [error, setError] = useState<{ input: boolean; date: boolean }>({
-    input: false,
+    input: true,
     date: true,
   });
 
