@@ -1,30 +1,29 @@
-import { useEffect, useState } from "react";
-import type { TaskListProps } from "../../types";
+import { useState } from "react";
+import type { Task, TaskListProps } from "../../types";
 import TaskItem from "./TaskItem";
 
 function TaskList({ tasks, onDelete, onStatusChange }: TaskListProps) {
-  const [sortedTasks, setSortedTasks] = useState(tasks);
   const [newToOld, setNewToOld] = useState(false);
   const [oldToNew, setOldToNew] = useState(false);
   const [searchWord, setSearchWord] = useState("");
+  let sortedTasks : Task[] = []
+  if (searchWord) {
+    sortedTasks = [...tasks].filter((task) =>
+      task.title.includes(searchWord))
+  } else {
+    sortedTasks = [...tasks];
+  }
 
   const handleSorting = (nto: boolean, otn: boolean) => {
-    const searchedTasks = [...tasks].filter(task => task.title.includes(searchWord))
     if (nto) {
-      setSortedTasks(
-        [...searchedTasks].sort(
-          (a, b) =>
-            new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()
-        )
+      sortedTasks = [...sortedTasks].sort(
+        (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()
       );
     }
 
     if (otn) {
-      setSortedTasks(
-        [...searchedTasks].sort(
-          (a, b) =>
-            new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-        )
+      sortedTasks = [...sortedTasks].sort(
+        (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
       );
     }
   };
@@ -46,8 +45,10 @@ function TaskList({ tasks, onDelete, onStatusChange }: TaskListProps) {
       button.classList.add("bg-green-300");
       setNewToOld(false);
       handleSorting(false, false);
-      const searchedTasks = [...tasks].filter(task => task.title.includes(searchWord))
-      setSortedTasks(searchedTasks);
+      const searchedTasks = [...tasks].filter((task) =>
+        task.title.includes(searchWord)
+      );
+      sortedTasks = [...searchedTasks];
     }
   };
 
@@ -68,29 +69,30 @@ function TaskList({ tasks, onDelete, onStatusChange }: TaskListProps) {
       button.classList.add("bg-green-300");
       setOldToNew(false);
       handleSorting(false, false);
-      const searchedTasks = [...tasks].filter(task => task.title.includes(searchWord))
-      setSortedTasks(searchedTasks);
+      const searchedTasks = [...tasks].filter((task) =>
+        task.title.includes(searchWord)
+      );
+      sortedTasks = [...searchedTasks];
     }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(event.target.value);
-    setSortedTasks([...tasks].filter(task => task.title.includes(event.target.value)))
+    sortedTasks = [...tasks].filter((task) =>
+      task.title.includes(event.target.value)
+    );
   };
 
-  useEffect(() => {
-    setSortedTasks(tasks);
-    if (newToOld) {
-      handleSorting(true, false);
-    }
-    if (oldToNew) {
-      handleSorting(false, true);
-    }
-  }, [tasks]);
+  if (newToOld) {
+    handleSorting(true, false);
+  }
+  if (oldToNew) {
+    handleSorting(false, true);
+  }
 
   return (
     <div>
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <div className="mx-5 text-center">
           <p>Sort by Due Date</p>
           <button
@@ -106,7 +108,7 @@ function TaskList({ tasks, onDelete, onStatusChange }: TaskListProps) {
             Oldest ➡️ Newest
           </button>
         </div>
-        <div className='mx-5 text-center'>
+        <div className="mx-5 text-center">
           <label htmlFor="searchWord">Filter by Title</label>
           <br />
           <input

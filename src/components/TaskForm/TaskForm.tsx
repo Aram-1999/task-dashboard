@@ -1,6 +1,10 @@
 import type { Task } from "../../types";
 import { useState } from "react";
-import { dateDisplay, isTaskPriority, isTaskStatus } from "../../utils/taskUtils"; 
+import {
+  dateDisplay,
+  isTaskPriority,
+  isTaskStatus,
+} from "../../utils/taskUtils";
 interface FormProps {
   onSubmit: (task: Task) => void;
 }
@@ -13,6 +17,11 @@ function TaskForm({ onSubmit }: FormProps) {
     id: "",
     priority: "low",
     status: "pending",
+  });
+
+  const [error, setError] = useState<{ input: boolean; date: boolean }>({
+    input: false,
+    date: true,
   });
 
   const handleChange = (
@@ -29,9 +38,12 @@ function TaskForm({ onSubmit }: FormProps) {
     setFormData((f) => {
       const [year, month, day] = event.target.value.split("-");
       return {
-      ...f,
-      dueDate: dateDisplay(new Date(Number(year), Number(month)-1, Number(day))),
-    }});
+        ...f,
+        dueDate: dateDisplay(
+          new Date(Number(year), Number(month) - 1, Number(day))
+        ),
+      };
+    });
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -51,6 +63,24 @@ function TaskForm({ onSubmit }: FormProps) {
 
   const handleForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (formData.title.length < 1) {
+      setError((prev) => ({ ...prev, input: false }));
+      return;
+    }
+    const today = new Date()
+    const calendarDate = formData.dueDate.split('-')
+    const todayTimeStamp = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
+    const calendarDateTimeStamp = new Date(Number(calendarDate[0]), Number(calendarDate[1])-1, Number(calendarDate[2])).getTime()
+    
+    if (calendarDateTimeStamp - todayTimeStamp < 0) {
+      setError((prev) => ({ ...prev, date: false }));
+      return;
+    }
+
+    setError((prev) => ({ ...prev, input: true }));
+    setError(prev => ({...prev, date: true}))
+
     onSubmit({
       ...formData,
       id: Date.now().toString(),
@@ -89,6 +119,9 @@ function TaskForm({ onSubmit }: FormProps) {
         onChange={handleChange}
       />
       <br />
+      {!error.input && (
+        <p className="text-sm text-red-500">The title must exist!</p>
+      )}
       <label className="text-lg font-semibold" htmlFor={formIDs.description}>
         Description
       </label>
@@ -102,19 +135,26 @@ function TaskForm({ onSubmit }: FormProps) {
         value={formData.description}
         onChange={handleChange}
       />
-      <div className='mt-5'>
-        <label className="text-lg font-semibold" htmlFor={formIDs.dueDate}>
-          Due Date
-        </label>
-        <input
-          className="border rounded-sm mx-5 px-2 py-1"
-          type="date"
-          id={formIDs.dueDate}
-          name="dueDate"
-          value={formData.dueDate}
-          onChange={handleDateChange}
-        />
-        <label className="ml-8 text-lg font-semibold" htmlFor={formIDs.priority}>
+      <div className="mt-5">
+        <div className='inline'>
+          <label className="text-lg font-semibold" htmlFor={formIDs.dueDate}>
+            Due Date
+          </label>
+          <input
+            className="border rounded-sm mx-5 px-2 py-1"
+            type="date"
+            id={formIDs.dueDate}
+            name="dueDate"
+            value={formData.dueDate}
+            onChange={handleDateChange}
+          />
+          {!error.date && <p className="text-sm text-red-500">The due date can not be set backwards!</p>}
+        </div>
+
+        <label
+          className="ml-8 text-lg font-semibold"
+          htmlFor={formIDs.priority}
+        >
           Priority
         </label>
         <select
@@ -144,7 +184,10 @@ function TaskForm({ onSubmit }: FormProps) {
         </select>
       </div>
 
-      <button className="mt-5 border px-50 block mx-auto bg-blue-300 p-1 rounded-lg hover: cursor-pointer" type="submit">
+      <button
+        className="mt-5 border px-50 block mx-auto bg-blue-300 p-1 rounded-lg hover: cursor-pointer"
+        type="submit"
+      >
         Add!
       </button>
     </form>
